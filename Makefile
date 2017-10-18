@@ -1,4 +1,4 @@
-SRC=MarioFCT.c Mario.c
+SRC=MarioFCT.c Mario.c event.c sprite.c
 INC=$(wildcard *.h)
 BIN=Mario
 

@@ -15,7 +15,7 @@
 #define TAB_WIDTH 36
 #define TAB_HEIGHT 30
 
-#define TAB_NUMBER  1050
+#define TAB_NUMBER  1081
 
 
 int collision (sprite_t *sprite1, sprite_t *sprite2);

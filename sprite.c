@@ -102,21 +102,21 @@ void sprite_boost(sprite_t *sprite, float accel) {
 
 /* Handle the sprite to turn left */
 void sprite_turn_left (sprite_t *sprite){
-    if (sprite->current_frame == 6){
-        sprite->current_frame = 7;
+    if (sprite->current_frame == 3){
+        sprite->current_frame = 2;
     }
     else{
-        sprite->current_frame = 6;
+        sprite->current_frame = 3;
     }
 }
 
 /* Handle the sprite to turn right */
 void sprite_turn_right (sprite_t *sprite){
-    if (sprite->current_frame == 2){
-        sprite->current_frame = 3;
+    if (sprite->current_frame == 0){
+        sprite->current_frame = 1;
     }
     else{
-        sprite->current_frame = 2;
+        sprite->current_frame = 0;
     }
 }
 

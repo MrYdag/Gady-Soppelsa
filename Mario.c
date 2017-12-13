@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[]){
 
-    SDL_Surface  *screen, *world, *temp, *brick, *garane, *grass, *token;
+    SDL_Surface  *screen, *menu, *world, *temp, *brick, *garane, *grass, *token;
     /* Colorkey for the girl */
     int colorkey;
 
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     SDL_Init(SDL_INIT_VIDEO);
 
     /* set the title bar */
-    SDL_WM_SetCaption("SDL Animation", "SDL Animation");
+    SDL_WM_SetCaption("Garane", "Garane");
 
     /* create window */
     screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
@@ -39,20 +39,26 @@ int main(int argc, char* argv[]){
     SDL_FreeSurface(temp);
 
     /* load Garane */
-    temp  = SDL_LoadBMP("sprite.bmp");
+    temp  = SDL_LoadBMP("Garane.bmp");
     garane = SDL_DisplayFormat(temp);
     SDL_FreeSurface(temp);
 
     /* load Token */
-    temp  = SDL_LoadBMP("jeton.bmp");
+    temp  = SDL_LoadBMP("Jeton.bmp");
     token = SDL_DisplayFormat(temp);
     SDL_FreeSurface(temp);
+
+    /* load Menu */
+    temp  = SDL_LoadBMP("Menu.bmp");
+    menu = SDL_DisplayFormat(temp);
+    SDL_FreeSurface(temp);
+
 
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
     SDL_SetColorKey(garane, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
-    colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
-    SDL_SetColorKey(token, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    //colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+    //SDL_SetColorKey(token, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
     /* tab's memory */
     int **tab;
@@ -114,14 +120,14 @@ int main(int argc, char* argv[]){
             /* if it is a 2 we draw grass and earth */
             if (tab[i][j] == '2'){
                 if (tab[i][j-1] == '2'){
-                    sprite_add(tab_grass, &ntab_grass, 1400, grass, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 2, 1, 1, false);
+                    sprite_add(tab_grass, &ntab_grass, TAB_NUMBER, grass, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 2, 1, 1, false);
                 }
                 else {
-                    sprite_add(tab_grass, &ntab_grass, 1400, grass, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 2, 0, 1, false);
+                    sprite_add(tab_grass, &ntab_grass, TAB_NUMBER, grass, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 2, 0, 1, false);
                 }
             }
 
-            /* if it is a 4 we draw a token */
+            /* if it is a 3 we draw a token */
             if (tab[i][j] == '3'){
                 sprite_add(tab_token, &ntab_token, TAB_NUMBER, token, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 1, 0, 1, false);
             }
@@ -132,13 +138,32 @@ int main(int argc, char* argv[]){
 
 
     int Exit = 0;
+    int Menu = 0;
+    int pts = 0;
     char key[SDLK_LAST] = {0};
 
+    SDL_Rect position;
+    position.x = 0;
+    position.y = 0;
+    //position.w = SCREEN_WIDTH;
+    //position.h = SCREEN_HEIGHT;
 
+
+    while (!Menu){
+
+        update_events(key, &Menu, &girl);
+        alternative_HandleEvent(key, &Exit, &Menu, &girl, &timer);
+
+        SDL_BlitSurface(menu, NULL, screen, &position);
+        SDL_UpdateRect(screen, 0, 0, 0, 0);
+
+    }
+
+    //SDL_FreeSurface(world);
     while (!Exit){
 
         update_events(key, &Exit, &girl);
-        alternative_HandleEvent(key, &Exit, &girl, &timer);
+        alternative_HandleEvent(key, &Exit, &Menu, &girl, &timer);
         sprite_move2(&girl);
 
         /* Collide with the screen */
@@ -178,12 +203,23 @@ int main(int argc, char* argv[]){
 
             if (collide_brick){
                 girl.isJumping = false;
-                girl.vy = 0;
-                girl.y -= tab_brick[s].y - girl.w;
+                girl.vy = GRAVITY;
+                //girl.y -= tab_brick[s].y - girl.w;
 
 
         }
 
+
+        for (int s = 0; s < ntab_token; s++){
+            collide_brick = collision(&girl, &tab_token[s]);
+
+            if (collide_brick){
+                sprite_del(tab_token, &ntab_token, s);
+		pts += 1;
+                //girl.y -= tab_brick[s].y - girl.w;
+            }
+
+        }
 
                 /* collision above bricks
                 if (tab_brick[s].y == (girl.y + SPRITE_SIZE)){
@@ -242,14 +278,16 @@ int main(int argc, char* argv[]){
         position.h = SCREEN_HEIGHT;
 
 
-        for (int i = 0; i <= ntab_brick; i++){
+        for (int i = 0; i < ntab_brick; i++){
             sprite_draw(&tab_brick[i], screen);
         }
-        for (int i = 0; i <= ntab_grass; i++){
+
+        for (int i = 0; i < ntab_grass; i++){
             sprite_draw(&tab_grass[i], screen);
         }
 
-        for (int i = 0; i <= ntab_token; i++){
+
+        for (int i = 0; i < ntab_token; i++){
             sprite_draw(&tab_token[i], screen);
         }
         sprite_draw(&girl, screen);
@@ -269,8 +307,16 @@ int main(int argc, char* argv[]){
     SDL_FreeSurface(world);
     SDL_Quit();
 
+    if(pts < 2){
+        printf("Vous avez ramassé %d jeton ! \n", pts);
+    } else {
+        printf("Vous avez ramassé %d jetons ! \n", pts);
+    }
+
     return 0;
 }
+
+
 
 
 

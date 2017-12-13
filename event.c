@@ -1,10 +1,10 @@
 #include "event.h"
 
 /* for an alternative keyboard management */
-void alternative_HandleEvent(char *key, int *Exit, sprite_t *sprite, double *timer){
+void alternative_HandleEvent(char *key, int *Exit,int *Menu, sprite_t *sprite, double *timer){
 
     // prepare multiplayer game
-    SDLKey tabkey[NBPLAYERS][6] = {{SDLK_z ,SDLK_s ,SDLK_q ,SDLK_d , SDLK_SPACE, SDLK_ESCAPE}};
+    SDLKey tabkey[NBPLAYERS][7] = {{SDLK_z ,SDLK_s ,SDLK_q ,SDLK_d , SDLK_SPACE, SDLK_ESCAPE, SDLK_a}};
     int i;
     for(i=0; i < NBPLAYERS; i++){
 
@@ -31,6 +31,11 @@ void alternative_HandleEvent(char *key, int *Exit, sprite_t *sprite, double *tim
 
         if (key[tabkey[i][5]]){ // ESCAPE
             *Exit = 1;
+        }
+
+        if (key[tabkey[i][6]]){ // A
+            *Menu = 1;
+            *Exit = 0;
         }
     }
 }

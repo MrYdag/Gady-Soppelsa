@@ -14,7 +14,7 @@
 
 /* Define events functions */
 
-void alternative_HandleEvent(char *key, int *Exit, sprite_t *sprite, double *timer);
+void alternative_HandleEvent(char *key, int *Exit, int *Menu, sprite_t *sprite, double *timer);
 
 void update_events(char* keys, int *Exit, sprite_t *sprite);
 

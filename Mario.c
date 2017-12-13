@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[]){
 
-    SDL_Surface  *screen, *menu, *world, *temp, *brick, *garane, *grass, *token;
+    SDL_Surface  *screen, *menu, *world, *temp, *brick, *garane, *grass, *token, *bug;
     /* Colorkey for the girl */
     int colorkey;
 
@@ -53,12 +53,17 @@ int main(int argc, char* argv[]){
     menu = SDL_DisplayFormat(temp);
     SDL_FreeSurface(temp);
 
+    /* load Bug */
+    temp  = SDL_LoadBMP("Bug.bmp");
+    bug = SDL_DisplayFormat(temp);
+    SDL_FreeSurface(temp);
+
 
     colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
     SDL_SetColorKey(garane, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
-    //colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
-    //SDL_SetColorKey(token, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+    colorkey = SDL_MapRGB(screen->format, 255, 0, 255);
+    SDL_SetColorKey(token, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
 
     /* tab's memory */
     int **tab;
@@ -88,6 +93,11 @@ int main(int argc, char* argv[]){
     sprite_t *tab_token;
     tab_token = malloc(TAB_NUMBER * sizeof (sprite_t));
 
+    /* initialisation for bug */
+    int ntab_bug = 0;
+    sprite_t *tab_bug;
+    tab_bug = malloc(TAB_NUMBER * sizeof (sprite_t));
+
     /* Initialisation for coins
     int ntab_coin = 0;
     sprite_t *tab_coin;
@@ -109,8 +119,10 @@ int main(int argc, char* argv[]){
             if (caract != '\n'){
                 tab[i][j] = caract;
             }
-
+            if (tab[i][j] == '0' || tab[i][j] == '1' || tab[i][j] == '2' || tab[i][j] == '3'){
             /* if it is a 1 we draw a brick */
+            if (tab[i][j] == '0'){}
+
             if (tab[i][j] == '1'){
                 sprite_add(tab_brick, &ntab_brick, TAB_NUMBER, brick,
                            SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE*i, SPRITE_SIZE*j,
@@ -130,6 +142,10 @@ int main(int argc, char* argv[]){
             /* if it is a 3 we draw a token */
             if (tab[i][j] == '3'){
                 sprite_add(tab_token, &ntab_token, TAB_NUMBER, token, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 1, 0, 1, false);
+            }
+            } else {
+                sprite_add(tab_bug, &ntab_bug, TAB_NUMBER, bug, 32, 32, 32*i, 32*j, 0, 0, 1, 1, 1, 0, 1, false);
+
             }
           }
         }
@@ -290,6 +306,11 @@ int main(int argc, char* argv[]){
         for (int i = 0; i < ntab_token; i++){
             sprite_draw(&tab_token[i], screen);
         }
+
+        for (int i = 0; i < ntab_bug; i++){
+            sprite_draw(&tab_bug[i], screen);
+        }
+
         sprite_draw(&girl, screen);
 
         /* update the world */
@@ -299,10 +320,11 @@ int main(int argc, char* argv[]){
 
 
     /* Free variables */
-    for (int r = 0; r < TAB_HEIGHT; r++){
+    for (int r = 0; r < TAB_WIDTH; r++){
         free(tab[r]);
     }
     free(tab);
+    //free();
 
     SDL_FreeSurface(world);
     SDL_Quit();

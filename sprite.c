@@ -131,7 +131,8 @@ void sprite_jump (sprite_t *sprite){
 
   //sprite->ax = (5 * (-cos((90)*M_PI)/180));
   //sprite->ay = (-900000 * (sin((90)*M_PI)/180));
-  sprite->ay += -1;
+    sprite->ay += -1;
+
 }
 
 void sprite_jump_down (sprite_t *sprite, double *timer){

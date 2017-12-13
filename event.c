@@ -21,12 +21,7 @@ void alternative_HandleEvent(char *key, int *Exit,int *Menu, sprite_t *sprite, d
         }
 
         if (key[tabkey[i][4]]){ // SPACE
-            sprite_jump(sprite);
-            //sprite_move(sprite, 0);
-            /*while (time2 >= 0){
-                time2 += -1;
-            }
-            sprite_jump_down(sprite, timer);*/
+                sprite_jump(sprite);
         }
 
         if (key[tabkey[i][5]]){ // ESCAPE
